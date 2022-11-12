@@ -225,6 +225,7 @@ Step 26: Now the "productController.js" will be something like
 				}
 
 Step 27: Add a new router inside "productRoute.js" 
+
 				router.route("/product/new").post(createProduct);
 
 ______________________________________________Update Product_________________________________________________________
@@ -300,6 +301,7 @@ Step 30: Inside the "productController.js" type the following
 				}
 
 Step 31: Add the routes of the above insde the "productRoute.js" as
+				
 				router.route("/products").get(getAllProducts);
 				router.route("/product/new").post(createProduct);
 				router.route("/product/:id").put(updateProduct).delete(deleteProduct).get(getProductDetails);
@@ -308,7 +310,8 @@ ____________________________________________Error Handling______________________
 
 Step 32: Make a folder named "utils" inside the "backend" folder and make a file named "errorhandler.js" inside it
 
-Step 33: Type the following inside the file:
+Step 33: Type the following inside the file
+
 				class ErrorHandler extends Error{
    				 constructor(message, statusCode){
 				        super(message);
@@ -322,7 +325,8 @@ Step 33: Type the following inside the file:
 
 Step 34: Make a new folder named "middleware" inside the backend and make a new file named "error.js" inside it
 
-Step 35: Type the following inside the "error.js" file:
+Step 35: Type the following inside the "error.js" file
+
 				const ErrorHandler = require("../utils/errorhandler");
 
 				module.exports = (err, req, res, next) => {
@@ -339,10 +343,12 @@ Step 36: Import the errorMiddleware inside the "app.js"
 
 				const errorMiddleware = require("./middleware/error");
 
-Step 37: Use the errorMiddleware inside the "app.js"... Remember to use it below "app.use("/api/v1",product)"
+Step 37: Use the errorMiddleware inside the "app.js"... Remember to use it below "app.use("/api/v1",product)".
+
 				app.use(errorMiddleware);
 
-Step 38: Now you can go to the "productController.js" and update the files for example the "Get Product Details" will look like the following. But you have to import it to the "productController.js" file
+Step 38: Now you can go to the "productController.js" and update the files for example the "Get Product Details" will look like the following. But you have to import it to the "productController.js" file.
+
 				const ErrorHandler = require("../utils/errorhandler");
 				// Get Product Details
 				exports.getProductDetails = async (req, res, next)=>{
@@ -364,17 +370,20 @@ ___________________________________________Handling Async Errors________________
 
 It is a good practice to write .then and .catch inside async await functions. To avoid writing .then and .catch again and again inside the product controller we'll make an error handler for it
 
-Step 39: Make a new file inside the "middleware" named "catchAsynErrors.js" and add the following code into it
+Step 39: Make a new file inside the "middleware" named "catchAsynErrors.js" and add the following code into it.
 
 				const catchAsyncErrors = theFunc => (req, res, next) => {
 				    Promise.resolve(theFunc(req, res, next)).catch(next);
 				}
 
 				module.exports = catchAsyncErrors;
-step 40: Import it inside "productController.js" as
+				
+step 40: Import it inside "productController.js".
+
 				const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 
-Step 41: Now update the "productController.js" as
+Step 41: Now update the "productController.js".
+
 
 	const Product = require("../models/productModel");
 	const ErrorHandler = require("../utils/errorhandler");
@@ -488,7 +497,8 @@ Step 43: Inside the "server.js" write the following code at the end
 	    })
 	})
 
-Step 44: Now you can remove the ".catch" method inside "database.js" and your " database.js" will look like
+Step 44: Now you can remove the ".catch" method inside "database.js" and your " database.js" will look like.
+
 	const mongoose = require("mongoose");
 
 	const connectDatabase = ()=>{
@@ -502,7 +512,8 @@ ___________________________________________Handling Uncaught Exception__________
 
 If you type "console.log(youtube)" in your "server.js" then it will throw an error which says "youtube is not defined". These type of errors are called uncaught errors.
 
-Step 45: Inside the "server.js" file at the top of the file, type the following code:
+Step 45: Inside the "server.js" file at the top of the file, type the following code
+
 	// Uncaught Exception Error
 	process.on("uncaughtException", err=>{
 	    console.log(`Error: ${err.message}`);
@@ -519,7 +530,8 @@ Step 46: If you give the less or more number of characters in the id then it wil
 	        err = new ErrorHandler(message, 400);
 	    }
 __________________________________________Searching Products by Name________________________________________
-Step 47: Make a new file inside "utils" named "apifeatures.js" and add the following code into it
+Step 47: Make a new file inside "utils" named "apifeatures.js" and add the following code into it.
+
 	class ApiFeatures {
 	    constructor(query, queryStr){
 	        this.query = query;
@@ -542,7 +554,8 @@ Step 47: Make a new file inside "utils" named "apifeatures.js" and add the follo
 	}
 	
 	module.exports = ApiFeatures;
-Step 48: Update the "getAllProducts" section of "productController.js" as
+Step 48: Update the "getAllProducts" section of "productController.js".
+
 	// Get All Products
 	exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 	    const apiFeature = new ApiFeatures(Product.find(), req.query).search();
@@ -557,7 +570,8 @@ Step 48: Update the "getAllProducts" section of "productController.js" as
 	});
 
 __________________________________________Adding filter Section_______________________________________
-Step 49: Add the following object below the search() object inside "ApiFeatures" class inside "apifeatures.js"
+Step 49: Add the following object below the search() object inside "ApiFeatures" class inside "apifeatures.js".
+
 	    filter(){
 	        const queryCopy = {...this.queryStr};
 	        // Removing some fields for category
@@ -574,7 +588,8 @@ Here we have made the copy of queryStr first and then stored the copy inside the
 Also, the queryStr is an object which is {"category" : "something"} so no need to pass the queryCopy as an object inside this.query.find()
 Also, this is case Sensitive so a category of "Laptop" will be searched as a "Laptop" only
 
-Step 50: Update the "getAllProducts" of "productController.js" as
+Step 50: Update the "getAllProducts" of "productController.js".
+
 	// Get All Products
 	exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 	    const apiFeature = new ApiFeatures(Product.find(), req.query).search().filter();
@@ -590,7 +605,8 @@ Step 50: Update the "getAllProducts" of "productController.js" as
 
 _________________________________Filter for pricing and Rating________________________________________
 
-Step 51: To add the pricing and rating, update the filter() inisde the "apifeatures.js" as:
+Step 51: To add the pricing and rating, update the filter() inisde the "apifeatures.js" as.
+
 	filter(){
 	        const queryCopy = {...this.queryStr};
 	        // Removing some fields for category
