@@ -307,17 +307,17 @@ Step 30: Inside the "productController.js" type the following
 				}
 
 Step 31: Add the routes of the above insde the "productRoute.js" as
-				
+```				
 				router.route("/products").get(getAllProducts);
 				router.route("/product/new").post(createProduct);
 				router.route("/product/:id").put(updateProduct).delete(deleteProduct).get(getProductDetails);
-
+```
 ____________________________________________Error Handling_________________________________________________
 
 Step 32: Make a folder named "utils" inside the "backend" folder and make a file named "errorhandler.js" inside it
 
 Step 33: Type the following inside the file
-
+```
 				class ErrorHandler extends Error{
    				 constructor(message, statusCode){
 				        super(message);
@@ -328,11 +328,11 @@ Step 33: Type the following inside the file
 				}
 
 				module.exports = ErrorHandler;
-
+```
 Step 34: Make a new folder named "middleware" inside the backend and make a new file named "error.js" inside it
 
 Step 35: Type the following inside the "error.js" file
-
+```
 				const ErrorHandler = require("../utils/errorhandler");
 
 				module.exports = (err, req, res, next) => {
@@ -344,17 +344,17 @@ Step 35: Type the following inside the "error.js" file
 				        message: err.messages
 				    })
 				}
-
+```
 Step 36: Import the errorMiddleware inside the "app.js"
-
+```
 				const errorMiddleware = require("./middleware/error");
-
+```
 Step 37: Use the errorMiddleware inside the "app.js"... Remember to use it below "app.use("/api/v1",product)".
-
+```
 				app.use(errorMiddleware);
-
+```
 Step 38: Now you can go to the "productController.js" and update the files for example the "Get Product Details" will look like the following. But you have to import it to the "productController.js" file.
-
+```
 				const ErrorHandler = require("../utils/errorhandler");
 				// Get Product Details
 				exports.getProductDetails = async (req, res, next)=>{
@@ -369,7 +369,7 @@ Step 38: Now you can go to the "productController.js" and update the files for e
 			        	product
 				    })
 				}
-
+```
 	Now if you don't give a valid product id while finding it or getting it then it will display the error accordingly
 
 ___________________________________________Handling Async Errors_________________________________________________
@@ -377,19 +377,19 @@ ___________________________________________Handling Async Errors________________
 It is a good practice to write .then and .catch inside async await functions. To avoid writing .then and .catch again and again inside the product controller we'll make an error handler for it
 
 Step 39: Make a new file inside the "middleware" named "catchAsynErrors.js" and add the following code into it.
-
+```
 				const catchAsyncErrors = theFunc => (req, res, next) => {
 				    Promise.resolve(theFunc(req, res, next)).catch(next);
 				}
 
 				module.exports = catchAsyncErrors;
-				
+```			
 step 40: Import it inside "productController.js".
-
+```
 				const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-
+```
 Step 41: Now update the "productController.js".
-
+```
 
 	const Product = require("../models/productModel");
 	const ErrorHandler = require("../utils/errorhandler");
@@ -476,7 +476,7 @@ Step 41: Now update the "productController.js".
 	        }
 	    )
 	});
-	
+```	
 Now if you don't type the name or any required field while creating the product then it won't crash the server rather it will display the error
 
 ________________________________________________Unhandled Promise Rejection__________________________________________
@@ -486,12 +486,13 @@ If we change the "DB_URI"  inside the "config.env" file to "mongodb://localhost:
 We have to crash the Server 
 
 Step 42: Inside the "server.js" update the app.listen to the following
-
+```
 	const server = app.listen(process.env.PORT, ()=>{
 	    console.log(`Server is listening on http://localhost:${process.env.PORT}`);
 	})
-
+```
 Step 43: Inside the "server.js" write the following code at the end
+```
 	// Unhandled Promsie Rejection
 
 	process.on("unhandledRejection", err => {
@@ -502,9 +503,9 @@ Step 43: Inside the "server.js" write the following code at the end
         	process.exit(1);
 	    })
 	})
-
+```
 Step 44: Now you can remove the ".catch" method inside "database.js" and your " database.js" will look like.
-
+```
 	const mongoose = require("mongoose");
 
 	const connectDatabase = ()=>{
@@ -514,30 +515,32 @@ Step 44: Now you can remove the ".catch" method inside "database.js" and your " 
 	}
 
 	module.exports = connectDatabase;
+```
 ___________________________________________Handling Uncaught Exception_________________________________________
 
 If you type "console.log(youtube)" in your "server.js" then it will throw an error which says "youtube is not defined". These type of errors are called uncaught errors.
 
 Step 45: Inside the "server.js" file at the top of the file, type the following code
-
+```
 	// Uncaught Exception Error
 	process.on("uncaughtException", err=>{
 	    console.log(`Error: ${err.message}`);
 	    console.log("Shutting down the server due to uncaught exception");
 	    process.exit(1);
 	})
-
+```
 __________________________________________Handling Cast Error Mongodb_________________________________________
 Step 46: If you give the less or more number of characters in the id then it will show you a cast error and to handle this error we can write the following code inside the "errorhandler.js" just below the line "err.message = err.message || "Internal Server Error";"
-
+```
 	// Mongodb Cast Error Handler
 	    if(err.name === "CastError"){
 	        const message = `Resource not found. Invalid ${err.path}`;
 	        err = new ErrorHandler(message, 400);
 	    }
+```
 __________________________________________Searching Products by Name________________________________________
 Step 47: Make a new file inside "utils" named "apifeatures.js" and add the following code into it.
-
+```
 	class ApiFeatures {
 	    constructor(query, queryStr){
 	        this.query = query;
@@ -560,8 +563,9 @@ Step 47: Make a new file inside "utils" named "apifeatures.js" and add the follo
 	}
 	
 	module.exports = ApiFeatures;
+```
 Step 48: Update the "getAllProducts" section of "productController.js".
-
+```
 	// Get All Products
 	exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 	    const apiFeature = new ApiFeatures(Product.find(), req.query).search();
@@ -574,10 +578,10 @@ Step 48: Update the "getAllProducts" section of "productController.js".
 	        }
 	    )
 	});
-
+```
 __________________________________________Adding filter Section_______________________________________
 Step 49: Add the following object below the search() object inside "ApiFeatures" class inside "apifeatures.js".
-
+```
 	    filter(){
 	        const queryCopy = {...this.queryStr};
 	        // Removing some fields for category
@@ -589,13 +593,14 @@ Step 49: Add the following object below the search() object inside "ApiFeatures"
 	        this.query = this.query.find(queryCopy);
 	        return this;
 	    }
+```
 
 Here we have made the copy of queryStr first and then stored the copy inside the queryCopy because we do not want to alter the real queryStr.
 Also, the queryStr is an object which is {"category" : "something"} so no need to pass the queryCopy as an object inside this.query.find()
 Also, this is case Sensitive so a category of "Laptop" will be searched as a "Laptop" only
 
 Step 50: Update the "getAllProducts" of "productController.js".
-
+```
 	// Get All Products
 	exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 	    const apiFeature = new ApiFeatures(Product.find(), req.query).search().filter();
@@ -608,11 +613,11 @@ Step 50: Update the "getAllProducts" of "productController.js".
 	        }
 	    )
 	});
-
+```
 _________________________________Filter for pricing and Rating________________________________________
 
 Step 51: To add the pricing and rating, update the filter() inisde the "apifeatures.js" as.
-
+```
 	filter(){
 	        const queryCopy = {...this.queryStr};
 	        // Removing some fields for category
@@ -627,8 +632,8 @@ Step 51: To add the pricing and rating, update the filter() inisde the "apifeatu
 
 	        this.query = this.query.find(JSON.parse(queryStr));
 	        return this;
-
 	    }
+```
 
 Now you can go to the postman and type the following
 			KEY				VALUE
