@@ -336,7 +336,7 @@ Step 35: Type the following inside the "error.js" file
 				const ErrorHandler = require("../utils/errorhandler");
 
 				module.exports = (err, req, res, next) => {
-				    err.statusCode = err.statusCode || "500";
+				    err.statusCode = err.statusCode || 500;
 				    err.message = err.message || "Internal Server Error";
 	
 				    res.status(err.statusCode).json({
