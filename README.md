@@ -529,7 +529,8 @@ Step 45: Inside the "server.js" file at the top of the file, type the following 
 	    process.exit(1);
 	})
 ```
-__________________________________________Handling Cast Error Mongodb_________________________________________
+
+___________________________________________Handling Cast Error Mongodb_________________________________________
 Step 46: If you give the less or more number of characters in the id then it will show you a cast error and to handle this error we can write the following code inside the "errorhandler.js" just below the line "err.message = err.message || "Internal Server Error";"
 ```
 	// Mongodb Cast Error Handler
@@ -538,7 +539,7 @@ Step 46: If you give the less or more number of characters in the id then it wil
 	        err = new ErrorHandler(message, 400);
 	    }
 ```
-__________________________________________Searching Products by Name________________________________________
+___________________________________________Searching Products by Name_________________________________________
 Step 47: Make a new file inside "utils" named "apifeatures.js" and add the following code into it.
 ```
 	class ApiFeatures {
