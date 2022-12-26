@@ -49,7 +49,7 @@ Step 13: Inside the "productController.js", type the following
  			   res.status(200).json({message: "route is working fine"});
 			}
 ```
-Step 14: Inside the "productRoute.js", type the following
+Step 14: Inside the "productRoute.js", type the following 
 ```
 			const express = require("express");
 			const { getAllProducts } = require("../controllers/productController");
